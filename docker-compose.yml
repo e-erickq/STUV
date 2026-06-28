@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: stuv
+      POSTGRES_PASSWORD: stuv
+      POSTGRES_DB: stuv
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://stuv:stuv@db:5432/stuv
+      JWT_SECRET: change-me-in-production
+      NODE_ENV: production
+    ports:
+      - '3000:3000'
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - '5173:80'
+
+volumes:
+  postgres_data:

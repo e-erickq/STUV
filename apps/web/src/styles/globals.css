@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Fontes carregadas via <link> no index.html: Inter, Plus Jakarta Sans, JetBrains Mono */
+
+@layer base {
+  :root {
+    /* STUV Design Tokens */
+    --background: 30 14% 97%;        /* Stone-50 */
+    --foreground: 222 47% 11%;       /* Slate-900 */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 239 84% 60%;          /* Indigo-600 #4F46E5 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 20% 65%;        /* Slate-400 */
+    --secondary-foreground: 222 47% 11%;
+    --muted: 215 28% 95%;            /* Slate-100 */
+    --muted-foreground: 215 16% 47%; /* Slate-500 */
+    --accent: 189 94% 43%;           /* Cyan-500 #06B6D4 */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 32% 91%;           /* Slate-200 */
+    --input: 215 32% 91%;
+    --ring: 239 84% 60%;
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer utilities {
+  /* Status Execução */
+  .status-passou       { @apply text-green-700 bg-green-50; }
+  .status-falhou       { @apply text-red-700 bg-red-50; }
+  .status-bloqueado    { @apply text-orange-700 bg-orange-50; }
+  .status-pulado       { @apply text-slate-600 bg-slate-100; }
+  .status-em-execucao  { @apply text-blue-700 bg-blue-50; }
+  .status-nao-exec     { @apply text-slate-400 bg-slate-50; }
+
+  /* Border-left de status */
+  .card-passou         { @apply border-l-4 border-l-green-500; }
+  .card-falhou         { @apply border-l-4 border-l-red-500; }
+  .card-bloqueado      { @apply border-l-4 border-l-orange-500; }
+  .card-pulado         { @apply border-l-4 border-l-slate-400; }
+
+  /* Gravidade */
+  .gravidade-critica   { @apply text-red-900 bg-red-100; }
+  .gravidade-alta      { @apply text-red-700 bg-red-50; }
+  .gravidade-media     { @apply text-amber-700 bg-amber-50; }
+  .gravidade-baixa     { @apply text-green-700 bg-green-50; }
+
+  /* Perfil */
+  .perfil-admin        { @apply text-indigo-700 bg-indigo-50; }
+  .perfil-gerente      { @apply text-cyan-700 bg-cyan-50; }
+  .perfil-testador     { @apply text-slate-600 bg-slate-100; }
+}

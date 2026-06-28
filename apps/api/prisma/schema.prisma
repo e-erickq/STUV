@@ -1,0 +1,187 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PerfilUsuario {
+  ADMINISTRADOR
+  GERENTE
+  TESTADOR
+}
+
+enum StatusPlano {
+  RASCUNHO
+  ATIVO
+  EM_EXECUCAO
+  CONCLUIDO
+}
+
+enum PrioridadeCasoTeste {
+  ALTA
+  MEDIA
+  BAIXA
+}
+
+enum ResultadoExecucao {
+  NAO_EXECUTADO
+  EM_EXECUCAO
+  PASSOU
+  FALHOU
+  BLOQUEADO
+  PULADO
+}
+
+enum TipoEvidencia {
+  IMAGEM
+  LOG
+  ARQUIVO
+}
+
+enum GravidadeDefeito {
+  CRITICA
+  ALTA
+  MEDIA
+  BAIXA
+}
+
+enum EstadoDefeito {
+  ABERTO
+  EM_ANALISE
+  EM_CORRECAO
+  RETESTADO
+  FECHADO
+  REJEITADO
+}
+
+enum AcaoAuditoria {
+  CRIACAO
+  EDICAO
+  MUDANCA_ESTADO
+  EXCLUSAO
+}
+
+model Usuario {
+  id         String        @id @default(uuid())
+  nome       String
+  email      String        @unique
+  senhaHash  String
+  perfil     PerfilUsuario
+  criadoEm  DateTime      @default(now())
+
+  execucoes   Execucao[]
+  defeitos    Defeito[]    @relation("AutorDefeito")
+  logsAuditoria LogAuditoria[]
+
+  @@map("usuarios")
+}
+
+model PlanoTeste {
+  id                 String      @id @default(uuid())
+  nome               String
+  descricao          String?
+  status             StatusPlano @default(RASCUNHO)
+  etapaWizardAtual   Int         @default(1)
+  criadoEm          DateTime    @default(now())
+  atualizadoEm      DateTime    @updatedAt
+
+  casosUso CasoUso[]
+
+  @@map("planos_teste")
+}
+
+model CasoUso {
+  id                 String   @id @default(uuid())
+  planoId            String
+  nome               String
+  descricao          String?
+  atores             String?
+  fluxoPrincipal     String
+  fluxosAlternativos String?
+  criadoEm          DateTime @default(now())
+
+  plano     PlanoTeste @relation(fields: [planoId], references: [id], onDelete: Cascade)
+  casosTeste CasoTeste[]
+
+  @@map("casos_uso")
+}
+
+model CasoTeste {
+  id               String              @id @default(uuid())
+  ucId             String
+  nome             String
+  preCondicoes     String?
+  passos           String
+  resultadoEsperado String
+  prioridade       PrioridadeCasoTeste @default(MEDIA)
+  criadoEm        DateTime            @default(now())
+
+  casoUso   CasoUso    @relation(fields: [ucId], references: [id], onDelete: Cascade)
+  execucoes Execucao[]
+
+  @@map("casos_teste")
+}
+
+model Execucao {
+  id           String            @id @default(uuid())
+  ctId         String
+  executorId   String
+  resultado    ResultadoExecucao @default(NAO_EXECUTADO)
+  motivo       String?
+  dataExecucao DateTime          @default(now())
+
+  casoTeste CasoTeste  @relation(fields: [ctId], references: [id], onDelete: Cascade)
+  executor  Usuario    @relation(fields: [executorId], references: [id])
+  evidencias Evidencia[]
+  defeitos   Defeito[]
+
+  @@map("execucoes")
+}
+
+model Evidencia {
+  id         String        @id @default(uuid())
+  execucaoId String
+  tipo       TipoEvidencia
+  urlArquivo String
+  criadoEm  DateTime      @default(now())
+
+  execucao Execucao @relation(fields: [execucaoId], references: [id], onDelete: Cascade)
+
+  @@map("evidencias")
+}
+
+model Defeito {
+  id               String         @id @default(uuid())
+  execucaoId       String
+  autorId          String
+  titulo           String
+  descricao        String
+  gravidade        GravidadeDefeito
+  estado           EstadoDefeito  @default(ABERTO)
+  passosReproducao String
+  criadoEm        DateTime       @default(now())
+  atualizadoEm    DateTime       @updatedAt
+
+  execucao Execucao @relation(fields: [execucaoId], references: [id], onDelete: Cascade)
+  autor    Usuario  @relation("AutorDefeito", fields: [autorId], references: [id])
+
+  @@map("defeitos")
+}
+
+model LogAuditoria {
+  id         String        @id @default(uuid())
+  entidade   String
+  entidadeId String
+  acao       AcaoAuditoria
+  usuarioId  String
+  dataHora   DateTime      @default(now())
+  dadosAntes Json?
+  dadosDepois Json?
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+
+  @@map("logs_auditoria")
+}
