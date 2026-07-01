@@ -16,6 +16,8 @@ const UCDetalhePage = lazy(() => import('./pages/casos-uso/UCDetalhePage').then(
 const ExecucaoPage = lazy(() => import('./pages/execucoes/ExecucaoPage').then((m) => ({ default: m.ExecucaoPage })));
 const DefeitosPage = lazy(() => import('./pages/defeitos/DefeitosPage').then((m) => ({ default: m.DefeitosPage })));
 const RelatoriosPage = lazy(() => import('./pages/relatorios/RelatoriosPage').then((m) => ({ default: m.RelatoriosPage })));
+const CasosUsoGlobalPage = lazy(() => import('./pages/casos-uso/CasosUsoGlobalPage').then((m) => ({ default: m.CasosUsoGlobalPage })));
+const ExecucoesGlobalPage = lazy(() => import('./pages/execucoes/ExecucoesGlobalPage').then((m) => ({ default: m.ExecucoesGlobalPage })));
 
 function PageLoader() {
   return (
@@ -94,8 +96,8 @@ export default function App() {
               }
             />
 
-            <Route path="/casos-uso" element={<div className="p-8"><h1 className="font-display text-2xl font-bold">Casos de Uso</h1><p className="mt-2 text-muted-foreground">Em construção.</p></div>} />
-            <Route path="/execucoes" element={<div className="p-8"><h1 className="font-display text-2xl font-bold">Execuções</h1><p className="mt-2 text-muted-foreground">Em construção.</p></div>} />
+            <Route path="/casos-uso" element={<CasosUsoGlobalPage />} />
+            <Route path="/execucoes" element={<ExecucoesGlobalPage />} />
             <Route path="/defeitos" element={<DefeitosPage />} />
             <Route path="/relatorios" element={<RelatoriosPage />} />
 
