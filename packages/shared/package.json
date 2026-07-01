@@ -11,7 +11,7 @@
     }
   },
   "scripts": {
-    "build": "tsc --noEmit"
+    "build": "tsc -p tsconfig.cjs.json"
   },
   "devDependencies": {
     "typescript": "^5.5.4"

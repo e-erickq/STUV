@@ -83,7 +83,7 @@ export class ExecucoesController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: path.join(__dirname, '..', '..', '..', '..', '..', 'uploads'),
+        destination: path.join(__dirname, '..', '..', 'uploads'),
         filename: (_req, file, cb) => {
           const ext = path.extname(file.originalname);
           const unique = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
