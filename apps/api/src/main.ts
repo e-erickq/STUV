@@ -19,7 +19,10 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors({ origin: 'http://localhost:5173', credentials: true });
+  const corsOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
+    : 'http://localhost:5173';
+  app.enableCors({ origin: corsOrigins, credentials: true });
 
   const config = new DocumentBuilder()
     .setTitle('STUV API')
