@@ -8,6 +8,8 @@ build/
 .cache/
 coverage/
 .turbo/
+*.tsbuildinfo
+apps/web/vite.config.d.ts
 apps/api/uploads/*
 !apps/api/uploads/.gitkeep
 packages/shared/uploads/

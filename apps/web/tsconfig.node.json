@@ -10,7 +10,7 @@
     "moduleDetection": "force",
     "strict": true,
     "composite": true,
-    "noEmit": true
+    "emitDeclarationOnly": true
   },
   "include": ["vite.config.ts"]
 }
